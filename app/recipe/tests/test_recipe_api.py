@@ -23,7 +23,7 @@ from recipe.serializers import (
 RECIPES_URL = reverse('recipe:recipe-list')
 
 def detail_url(recipe_id):
-    """"Create and return a recipe detail URL."""
+    """Create and return a recipe detail URL."""
     return reverse('recipe:recipe-detail', args=[recipe_id])
 
 def create_recipe(user, **params):
@@ -257,14 +257,14 @@ class PrivateRecipeAPITests(TestCase):
         recipe = create_recipe(user=self.user)
         recipe.tags.add(tag_breakfast)
 
-        tag_lunch = Tag.objects.create(self.user, name='Lunch')
+        tag_lunch = Tag.objects.create(user=self.user, name='Lunch')
         payload = {'tags': [{'name': 'Lunch'}]}
         url = detail_url(recipe.id)
         res = self.client.patch(url, payload, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn(tag_lunch, recipe.tags.all())
-        self.assertNotIn(tag_breakfast, recipe.tag.all())
+        self.assertNotIn(tag_breakfast, recipe.tags.all())
 
     def test_clear_recipe_tags(self):
         """Test clearing a recipes tags."""
